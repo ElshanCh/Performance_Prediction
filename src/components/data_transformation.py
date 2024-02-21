@@ -39,7 +39,9 @@ class DataTransformer:
 
             logging.info(f"Splitting the data into training and testing sets. Defined Split Date: {split_date}")
             train_data = df[df['ds'] <= split_date]
+            train_data.loc[:, 'ds'] = pd.to_datetime(train_data['ds'].copy())
             test_data = df[df['ds'] > split_date]
+            test_data.loc[:, 'ds'] = pd.to_datetime(test_data['ds'].copy())
 
             return train_data, test_data
         

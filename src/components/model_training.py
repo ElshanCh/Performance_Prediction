@@ -42,12 +42,12 @@ def compute_forecast_metrics(forecast, test_data):
 
         # Create a dictionary
         metrics = {
-            "Mean Absolute Error (MAE)": mae,
-            "Mean Squared Error (MSE)": mse,
-            "Root Mean Squared Error (RMSE)": rmse,
-            "Mean Absolute Percentage Error (MAPE)": mape,
-            "Symmetric Mean Absolute Percentage Error (SMAPE)": smape,
-            "R-squared (R²)": r_squared
+            "Mean Absolute Error": mae,
+            "Mean Squared Error": mse,
+            "Root Mean Squared Error": rmse,
+            "Mean Absolute Percentage Error": mape,
+            "Symmetric Mean Absolute Percentage Error": smape,
+            "R-squared": r_squared
         }
 
         logging.info(f"Metrics {metrics}")
