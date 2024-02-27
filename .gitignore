@@ -166,3 +166,4 @@ lightning_logs/
 Neural_Prohet_artifacts/
 mlruns/
 logs/
+*.pem

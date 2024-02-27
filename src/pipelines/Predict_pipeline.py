@@ -12,6 +12,7 @@ class NeuralProphetPredictor:
     def load_model(self):
         # Load the saved model
         self.loaded_model = load(self.model_path)
+        return self.loaded_model
 
     def load_csv_data(self, csv_file):
         # Load CSV data from provided location
