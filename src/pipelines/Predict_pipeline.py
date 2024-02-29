@@ -36,6 +36,10 @@ class NeuralProphetPredictor:
 
 # Example usage:
 if __name__ == "__main__":
+    from adtk.data import validate_series
+    from adtk.visualization import plot
+    from adtk.detector import *
+
     model_path = "Neural_Prophet_artifacts/128b15b75a854e8189aaae862ae6bacf/artifacts/np-model.np"
     predictor = NeuralProphetPredictor(model_path)
     predictor.load_model()
@@ -45,3 +49,11 @@ if __name__ == "__main__":
     # Assuming test_data length is required for forecasting periods
     future_forecast = predictor.make_predictions(data, 30)
     predictor.plot_forecast(future_forecast)
+
+    data = future_forecast[["ds", "yhat1"]].set_index("ds")
+    data = data["yhat1"]
+    threshold_detector = ThresholdAD(high=20000000)
+    anomalies = threshold_detector.detect(data)
+    plot(data, anomaly=anomalies, anomaly_color="red", anomaly_tag="marker")
+    plt.show()
+

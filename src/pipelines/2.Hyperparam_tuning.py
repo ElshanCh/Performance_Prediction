@@ -95,14 +95,14 @@ if __name__ == "__main__":
     hyperparameters = {
     'growth': ['linear'],
     'seasonality_mode': ['additive'],
-    'learning_rate': [0.003],
-    'n_changepoints': [0],
+    'learning_rate': [0.0085, 0.01],
+    # 'n_changepoints': [0],
     'changepoints_range': [0.95],
-    # 'yearly_seasonality': ["auto", True],
-    # 'weekly_seasonality': ["auto", True],
+    'yearly_seasonality': ["auto", True],
+    'weekly_seasonality': ["auto", True],
     # 'daily_seasonality': ["auto", True],
-    'epochs': [150],
-    'trend_reg': [5]
+    'epochs': [150,250],
+    # 'trend_reg': [5]
     }
     hyperparameter_tuning = HyperparameterTuning(hyperparameters)
     hyperparameter_tuning.run()
