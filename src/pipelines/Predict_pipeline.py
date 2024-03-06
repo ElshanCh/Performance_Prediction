@@ -47,13 +47,18 @@ if __name__ == "__main__":
     csv_file = "../../artifacts/train_data.csv"
     data = predictor.load_csv_data(csv_file)
     # Assuming test_data length is required for forecasting periods
-    future_forecast = predictor.make_predictions(data, 30)
-    predictor.plot_forecast(future_forecast)
+    future_forecast = predictor.make_predictions(data, 365)
+    # predictor.plot_forecast(future_forecast)
 
     data = future_forecast[["ds", "yhat1"]].set_index("ds")
     data = data["yhat1"]
     threshold_detector = ThresholdAD(high=20000000)
     anomalies = threshold_detector.detect(data)
+    # print(type(anomalies))
+    # print(anomalies)
+    true_rows = anomalies[anomalies].index.strftime('%Y-%m-%d').tolist()
+    print("#"*100)
+    print(f"{len(true_rows)} Dates with expected anomalies:\n",true_rows)
     plot(data, anomaly=anomalies, anomaly_color="red", anomaly_tag="marker")
+    print("#"*100)
     plt.show()
-
