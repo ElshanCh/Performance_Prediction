@@ -26,12 +26,21 @@ class HyperparameterTuning:
             set_random_seed(42)
             logging.info("Loading Train & Test Datasets")
 
-            train_data = read_csv_and_convert_date('../../artifacts/train_data.csv')
-            test_data = read_csv_and_convert_date('../../artifacts/test_data.csv')
+            train_data = read_csv_and_convert_date('../../artifacts/DT_TO500RT_SERVER/train_data.csv')
+            test_data = read_csv_and_convert_date('../../artifacts/DT_TO500RT_SERVER/test_data.csv')
+            print(len(train_data))
+
+            train_data = train_data[["ds","y"]][train_data["SERVER"]=="simislnxnss00.si.it"]
+            test_data = test_data[["ds","y"]][test_data["SERVER"]=="simislnxnss00.si.it"]
+            print(len(train_data))
+            train_data.drop_duplicates(inplace=True)
+            test_data.drop_duplicates(inplace=True)
+
+            print(len(train_data))
+            # print(train_data[train_data.duplicated()])
 
 
-
-            experiment_name = "Neural_Prophet"
+            experiment_name = "Neural_Prophet_DT_TO500RT"
             artifact_location = experiment_name+"_artifacts"
 
             experiment_id = create_mlflow_experiment(
@@ -59,7 +68,7 @@ class HyperparameterTuning:
                     model = NeuralProphet(**model_params)
                     model.add_country_holidays("IT")
 
-                    model.fit(train_data, freq='D', )
+                    model.fit(train_data, freq='T' )
                     end = time.time()
                     mlflow.log_metric("duration", end - start)
                     

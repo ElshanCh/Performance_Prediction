@@ -1,0 +1,28 @@
+simislnxnss00_si_it:
+####################
+TDRMAXRT-->
+    TDRRT - 0.33
+    TDRNRT - 0.18
+    TDRMAXNRT - 0.35
+    TDR_AICLOUD - 0.33
+    TDRMAX_AICLOUD - 0.32
+
+simislnxnss01_si_it:
+####################
+TDRMAXRT-->
+    TDRRT - 0.26
+    TDRNRT - 0.24
+    TDRMAXNRT - 0.56
+    TDR_AICLOUD - 0.25
+    TDRMAX_AICLOUD - 0.59
+
+simislnxnss02_si_it:
+####################
+TDRMAXRT-->
+    TDRRT - 0.14
+    TDRNRT - 0.09
+    TDRMAXNRT - 0.90
+    TDR_AICLOUD - 0.14
+    TDRMAX_AICLOUD - 0.94
+
+

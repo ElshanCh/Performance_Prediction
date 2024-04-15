@@ -10,8 +10,9 @@ import logging
 import pandas as pd
 
 class DataLoader:
-    def __init__(self, directory):
+    def __init__(self, directory, columns = []):
         self.directory = directory
+        self.columns = columns
 
     def load_parquet_files_generator(self):
         for root, dirs, files in os.walk(self.directory):
@@ -19,7 +20,7 @@ class DataLoader:
                 if file.endswith('.parquet'):
                     file_path = os.path.join(root, file)
                     try:
-                        df = pd.read_parquet(file_path, engine='fastparquet', columns=["DT", "NMSG"])
+                        df = pd.read_parquet(file_path, engine='fastparquet', columns=self.columns)
                         yield df
                     except Exception as e:
                         logging.info(f"Incompatible file has been detected in the following path: {file_path}. Error: {e}")
@@ -39,6 +40,7 @@ class DataLoader:
 
 # Example usage:
 if __name__ == "__main__":
-    data_directory = 'path/to/parquet/files'
-    data_loader = DataLoader(data_directory)
+    data_directory = '../../Data/train_data/'
+    data_loader = DataLoader(data_directory, columns=["DT","NMSG", "TO500RT"])
     df_full = data_loader.load_all_parquet_files()
+    df_full.head()

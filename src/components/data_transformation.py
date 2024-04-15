@@ -7,25 +7,29 @@ from datetime import datetime
 
 
 class DataTransformer:
-    def __init__(self, df_full):
+    def __init__(self, df_full, columns):
         self.df_full = df_full
+        self.columns = columns
     
     def transform_data(self):
         try:
             # Rename columns
             logging.info("Renaming the columns of the DataFrame")
-            self.df_full.rename(columns={'DT': 'ds', 'NMSG': 'y'}, inplace=True)
+            self.df_full.rename(columns={'DT': 'ds', self.columns[1]: 'y'}, inplace=True)
 
             # Convert "DS" column to datetime if it's not already
             logging.info("Conversion of DS column to datetime")
             self.df_full['ds'] = pd.to_datetime(self.df_full['ds'])
 
-            # Group by date and sum the "NMSG" values
-            logging.info("Grouping the data by date")
-            df_daily_sum = self.df_full.groupby(self.df_full['ds'].dt.date)['y'].sum().reset_index()
+            if "NMSG" in self.columns:
+                # Group by date and sum the "NMSG" values
+                logging.info("Grouping the data by date")
+                df_daily_sum = self.df_full.groupby(self.df_full['ds'].dt.date)['y'].sum().reset_index()
+                return df_daily_sum
 
-            return df_daily_sum
-
+            else: 
+                return self.df_full
+            
         except Exception as e:
             custom_exception = CustomException(e, sys)
             logging.error(custom_exception)
@@ -35,7 +39,8 @@ class DataTransformer:
     
     def split_data(self, df, split_date):
         try:
-            split_date = datetime.strptime(split_date, '%Y-%m-%d').date()
+            if "NMSG" in self.columns:
+                split_date = datetime.strptime(split_date, '%Y-%m-%d').date()
 
             logging.info(f"Splitting the data into training and testing sets. Defined Split Date: {split_date}")
             train_data = df[df['ds'] <= split_date]

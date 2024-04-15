@@ -167,3 +167,12 @@ Neural_Prohet_artifacts/
 mlruns/
 logs/
 *.pem
+
+test_data.csv
+train_data.csv
+*.png
+stat_info_*.txt
+notebooks/my_dir/*
+notebooks/Neural_Prohet_TimeOuts_artifacts/*
+notebooks/checkpoints/*
+notebooks/LSTM_Classification_models/*
