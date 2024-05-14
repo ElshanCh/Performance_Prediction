@@ -22,10 +22,12 @@ class DataTransformer:
             self.df_full['ds'] = pd.to_datetime(self.df_full['ds'])
 
             if "NMSG" in self.columns:
-                # Group by date and sum the "NMSG" values
-                logging.info("Grouping the data by date")
-                df_daily_sum = self.df_full.groupby(self.df_full['ds'].dt.date)['y'].sum().reset_index()
-                return df_daily_sum
+                # Group by date and hourly rate, and sum the "NMSG" values
+                logging.info("Grouping the data by date and hourly rate")
+                # df_hourly_sum = self.df_full.groupby([self.df_full['ds'].dt.date, self.df_full['ds'].dt.hour])['y'].sum().reset_index()
+                df_hourly_sum = self.df_full.groupby(self.df_full['ds'].dt.strftime('%Y-%m-%d %H')).agg({'y': 'sum'}).reset_index()
+                return df_hourly_sum
+
 
             else: 
                 return self.df_full
@@ -39,10 +41,11 @@ class DataTransformer:
     
     def split_data(self, df, split_date):
         try:
-            if "NMSG" in self.columns:
+            if "NMSG_1" in self.columns:
                 split_date = datetime.strptime(split_date, '%Y-%m-%d').date()
 
             logging.info(f"Splitting the data into training and testing sets. Defined Split Date: {split_date}")
+            df['ds'] = pd.to_datetime(df['ds'])
             train_data = df[df['ds'] <= split_date]
             train_data.loc[:, 'ds'] = pd.to_datetime(train_data['ds'].copy())
             test_data = df[df['ds'] > split_date]

@@ -1,0 +1,41 @@
+Topic: Hourly Forecasting of Number of Messages and Anomaly Classification.
+
+- OS used for development: UBUNTU
+
+As clear from the topic there are two Model in this project:
+- Hourly Forecasting of Number of Messages
+- Anomaly Classification
+
+1. Hourly Forecasting of Number of Messages(NMSG).
+
+- The idea of the model: To develop model with NeuralProphet algorithm that will be able to predict 
+the number of messages coming to the servers based on the historical data 
+
+- The Data is taken from the S3 production "Performance" bucket. This data is stored in "/Data/train_data/".
+
+- For this model there has been developed the POC first in the "notebooks/NeuralProphet_NMSG_testing.ipynb" file.
+And then has been modulized into the "src" folder.
+
+!!! Please notice that when you first time run requirements.txt uncomment the "-e ."  in the requirements.txt will trigger the setup.py. 
+After that you may comment it. It will let you to use python modul from different location.
+
+- Structure of the "src" folder:
+Here you may found two Folders ("components", "pipelines") and some additional python files.
+In the "components" folder as the name states there are defined components that get called 
+in specific pipelines of the "pipelines" folder, thus our main attention will be
+on the pipelines.
+
+- "src\pipelines" folder:
+"1.ETL_pipeline.py" is used for to export-transform-load the data for the model
+"2.Hyperparam_tuning.py" is used to perform hyperparameter tuning in order to find the best model.
+At this stage the MlFow has been used to track the trained models. 
+"3.Predict_pipeline.py" is used to predict on the model chosen from the output of the Huperparameter tuning.
+
+2. Anomaly Classification.
+
+- The idea of the model: To develop model an anomaly detection model that takes last 24 hours Performance data and predicts the anomaly based on historical pattern.
+There has been used a LSTM RNN model on timeseries.
+
+This model is in POC stage. It is Located in the following notebooks:
+- notebooks/LSTM_Classification_data_preparation.ipynb :  in this notebook you find the data preprocessing stage.
+- notebooks/LSTM_Classification_model.ipynb : basically the model itself.

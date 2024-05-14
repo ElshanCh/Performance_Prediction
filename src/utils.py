@@ -111,7 +111,12 @@ def GridSearch(hyperparameters, verbose=True):
 # Plotting test_data['y'] vs forecast['yhat1']
 ####################################################################################################
 
-def generate_comparison_plot(forecast, test_data):
+import matplotlib.pyplot as plt
+
+def generate_comparison_plot(forecast, test_data, figsize=(30, 15)):
+    # Create a figure with the specified size
+    plt.figure(figsize=figsize)
+
     # Calculate difference
     test_data['difference'] = test_data["y"] - forecast["yhat1"]
     
@@ -134,3 +139,4 @@ def generate_comparison_plot(forecast, test_data):
     plt.tight_layout()  # Adjust layout to prevent clipping of labels
 
     return plt
+

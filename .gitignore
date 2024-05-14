@@ -161,9 +161,10 @@ cython_debug/
 #.idea/
 
 
-Data/
+# Data/
+*.parquet
+*.xls
 lightning_logs/
-Neural_Prohet_artifacts/
 mlruns/
 logs/
 *.pem
@@ -173,6 +174,11 @@ train_data.csv
 *.png
 stat_info_*.txt
 notebooks/my_dir/*
-notebooks/Neural_Prohet_TimeOuts_artifacts/*
 notebooks/checkpoints/*
-notebooks/LSTM_Classification_models/*
+*.png
+*.np
+*.h5
+# notebooks/Neural_Prohet_TimeOuts_artifacts/*
+# notebooks/LSTM_Classification_models/*
+# Neural_Prohet_artifacts/
+# Neural_Prophet_*artifacts/

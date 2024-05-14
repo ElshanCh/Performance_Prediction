@@ -27,7 +27,7 @@ def run_etl_pipeline(data_directory='../../Data/train_data/', columns = [], spli
         # Data Saving
         ####################################################################################################
         # Define the folder path
-        folder_path = "../../artifacts/{}".format('_'.join(columns))
+        folder_path = "../../artifacts/v2/{}".format('_'.join(columns))
 
         # Create the directory if it does not exist
         if not os.path.exists(folder_path):
@@ -48,12 +48,12 @@ def run_etl_pipeline(data_directory='../../Data/train_data/', columns = [], spli
 if __name__ == "__main__":
     from datetime import datetime
 
-    # columns=["DT", "NMSG"]
-    columns=["DT", "TO500RT","SERVER"]
-    if "NMSG" in columns:
+    columns=["DT", "NMSG"]
+    # columns=["DT", "TO500RT","SERVER"]
+    if "NMSG_1" in columns:
         run_etl_pipeline(columns=columns)
     else:
-        date_string = '2023-12-31 23:59:59'
-        date_format = '%Y-%m-%d %H:%M:%S'
+        date_string = '2023-12-31 23'
+        date_format = '%Y-%m-%d %H'
         datetime_object = datetime.strptime(date_string, date_format)
         run_etl_pipeline(split_date=datetime_object, columns=columns)

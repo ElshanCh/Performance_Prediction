@@ -13,8 +13,10 @@ import time
 
 
 class HyperparameterTuning:
-    def __init__(self,hyperparameters, local =True):
+    def __init__(self,hyperparameters,file_path, experiment_name, local =True):
         self.hyperparameters = hyperparameters
+        self.experiment_name = experiment_name
+        self.file_path = file_path
         # Set variable 'local' to True if you want to run this notebook locally
         # self.local = local
         # # Set our tracking server uri for logging
@@ -26,12 +28,12 @@ class HyperparameterTuning:
             set_random_seed(42)
             logging.info("Loading Train & Test Datasets")
 
-            train_data = read_csv_and_convert_date('../../artifacts/DT_TO500RT_SERVER/train_data.csv')
-            test_data = read_csv_and_convert_date('../../artifacts/DT_TO500RT_SERVER/test_data.csv')
+            train_data = read_csv_and_convert_date(f'../../{self.file_path}/train_data.csv')
+            test_data = read_csv_and_convert_date(f'../../{self.file_path}/test_data.csv')
             print(len(train_data))
 
-            train_data = train_data[["ds","y"]][train_data["SERVER"]=="simislnxnss00.si.it"]
-            test_data = test_data[["ds","y"]][test_data["SERVER"]=="simislnxnss00.si.it"]
+            # train_data = train_data[["ds","y"]][train_data["SERVER"]=="simislnxnss00.si.it"]
+            # test_data = test_data[["ds","y"]][test_data["SERVER"]=="simislnxnss00.si.it"]
             print(len(train_data))
             train_data.drop_duplicates(inplace=True)
             test_data.drop_duplicates(inplace=True)
@@ -40,11 +42,11 @@ class HyperparameterTuning:
             # print(train_data[train_data.duplicated()])
 
 
-            experiment_name = "Neural_Prophet_DT_TO500RT"
-            artifact_location = experiment_name+"_artifacts"
+            # experiment_name = "Neural_Prophet_DT_TO500RT"
+            artifact_location = self.experiment_name +"_artifacts"
 
             experiment_id = create_mlflow_experiment(
-                experiment_name=experiment_name,
+                experiment_name=self.experiment_name ,
                 artifact_location=artifact_location,
                 tags={"env": "dev", "version": "1.0.0"}
             )
@@ -59,7 +61,6 @@ class HyperparameterTuning:
             param_combinations = GridSearch(hyperparameters, verbose=False)
             print(f"Number of Possible Parameter Combinations: {len(param_combinations)}")
             logging.info(f"Number of Possible Parameter Combinations: {len(param_combinations)}")
-
             for model_params in param_combinations:
                 with mlflow.start_run(run_name="hyperparameter_tuning_v1", experiment_id=experiment.experiment_id) as run:
                     mlflow.log_params(model_params)
@@ -68,7 +69,7 @@ class HyperparameterTuning:
                     model = NeuralProphet(**model_params)
                     model.add_country_holidays("IT")
 
-                    model.fit(train_data, freq='T' )
+                    model.fit(train_data, freq='h')
                     end = time.time()
                     mlflow.log_metric("duration", end - start)
                     
@@ -102,16 +103,31 @@ class HyperparameterTuning:
 
 if __name__ == "__main__":
     hyperparameters = {
-    'growth': ['linear'],
+    # 'growth': ['linear'],
     'seasonality_mode': ['additive'],
-    'learning_rate': [0.0085, 0.01],
-    # 'n_changepoints': [0],
-    'changepoints_range': [0.95],
-    'yearly_seasonality': ["auto", True],
-    'weekly_seasonality': ["auto", True],
+    # 'seasonality_mode': ['additive','multiplicative'],
+    # 'changepoints_range': [0.95,0.1],
+    # 'changepoints_range': [0.1],
+    'learning_rate': [0.9,0.01,0.001],
+    # 'learning_rate': [0.001, 0.01],
+    'yearly_seasonality': [True],
+    # 'yearly_seasonality': ["auto", True], 
+    'weekly_seasonality': ["auto"],
+    # 'weekly_seasonality': ["auto", True],
+    'daily_seasonality': [True],
     # 'daily_seasonality': ["auto", True],
-    'epochs': [150,250],
+    # 'n_changepoints': [0, 1],
+    'epochs': [200],
+    "loss_func" : ["MSE"],
+    # 'epochs': [150,250],
     # 'trend_reg': [5]
+    "batch_size" : [256],
+    "ar_layers": [10],  # Number of hidden layers
     }
-    hyperparameter_tuning = HyperparameterTuning(hyperparameters)
+
+    # data_set_name = "DT_CPU_MAX"
+    data_set_name = "DT_NMSG"
+    file_path = f"artifacts/v2/{data_set_name}"
+    experiment_name = f"Neural_Prophet_{data_set_name}_hourly"
+    hyperparameter_tuning = HyperparameterTuning(hyperparameters,file_path,experiment_name)
     hyperparameter_tuning.run()
