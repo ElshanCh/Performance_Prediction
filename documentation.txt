@@ -31,6 +31,8 @@ on the pipelines.
 At this stage the MlFow has been used to track the trained models. 
 "3.Predict_pipeline.py" is used to predict on the model chosen from the output of the Huperparameter tuning.
 
+Further improvements:
+- required to establish direct contact with the sourse of the data (for example)
 2. Anomaly Classification.
 
 - The idea of the model: To develop model an anomaly detection model that takes last 24 hours Performance data and predicts the anomaly based on historical pattern.
