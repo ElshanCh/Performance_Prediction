@@ -130,3 +130,35 @@ Project Description for Handover
   - Should be decided where to deploy the model.
 
 ---
+
+## Security — Dependency Audit & Updates
+
+### 2026-04-02 — Full security audit and CVE remediation
+
+A full Dependabot + CVE audit was performed on `requirements.txt`. All resolvable HIGH severity vulnerabilities were patched. Two CRITICAL issues (`torch`, `tensorflow`) and one disputed CRITICAL (`ray`) remain open and require separate evaluation before upgrading due to potential breaking changes.
+
+#### Patched (HIGH severity)
+
+| Package | Before | After | CVE(s) fixed |
+|---|---|---|---|
+| `mlflow` | 2.10.2 | 2.13.0 | CVE-2024-2928, CVE-2024-0520, CVE-2024-1560 — path traversal / LFI via URI manipulation |
+| `aiohttp` | 3.9.3 | 3.10.11 | CVE-2024-30251 (DoS), CVE-2024-23334 (dir traversal), CVE-2024-52304 (request smuggling) |
+| `Jinja2` | 3.1.3 | 3.1.6 | CVE-2024-34064 (HTML injection), CVE-2025-27516 (sandbox breakout / RCE) |
+| `Werkzeug` | 3.0.1 | 3.0.3 | CVE-2024-34069 — debugger RCE via cross-origin interaction |
+| `gunicorn` | 21.2.0 | 23.0.0 | CVE-2024-1135, CVE-2024-6827 — HTTP request smuggling (TE.CL) |
+| `Pillow` | 10.2.0 | 10.3.0 | CVE-2024-28219 — buffer overflow in `_imagingcms.c` |
+| `certifi` | 2024.2.2 | 2024.7.4 | CVE-2024-39689 — compromised GLOBALTRUST root CA in trust store |
+| `jupyter_server` | 2.12.5 | 2.14.1 | CVE-2024-35178 — NTLMv2 hash leak on Windows |
+| `jupyterlab` | 4.1.1 | 4.2.5 | CVE-2024-43805 — DOM Clobbering XSS via Markdown cells |
+| `notebook` | 7.1.0 | 7.2.2 | CVE-2024-43805 — same as above |
+| `protobuf` | 4.25.2 | 4.27.5 | CVE-2024-7254 — stack overflow DoS via recursive field parsing |
+| `urllib3` | 2.0.7 | 2.2.2 | CVE-2024-37891 — Proxy-Authorization header leaked on cross-origin redirect |
+
+#### Remaining open issues (require manual decision)
+
+| Package | Version | CVE | Severity | Notes |
+|---|---|---|---|---|
+| `torch` | 2.2.2 | CVE-2025-32434 | CRITICAL | Fix: `>=2.6.0`. Breaking change — held pending compatibility check. |
+| `tensorflow` | 2.15.0.post1 | CVE-2024-3660 | CRITICAL | Fix: `>=2.16.0`. Breaking change — held pending compatibility check. |
+| `ray` | 2.21.0 | CVE-2023-48022 | CRITICAL | No official patch (vendor disputed). Mitigation: firewall Ray Dashboard port, enable token auth. |
+
