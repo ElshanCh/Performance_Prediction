@@ -162,3 +162,16 @@ A full Dependabot + CVE audit was performed on `requirements.txt`. All resolvabl
 | `tensorflow` | 2.15.0.post1 | CVE-2024-3660 | CRITICAL | Fix: `>=2.16.0`. Breaking change — held pending compatibility check. |
 | `ray` | 2.21.0 | CVE-2023-48022 | CRITICAL | No official patch (vendor disputed). Mitigation: firewall Ray Dashboard port, enable token auth. |
 
+---
+
+### 2026-04-02 — requirements.txt refactored to direct dependencies only
+
+**Problem:** The original `requirements.txt` pinned all ~200 packages including transitive dependencies at exact versions. Dependabot raised 100+ alerts because every pinned transitive package was flagged individually.
+
+**Solution:** Replaced the full pinned list with ~35 direct dependencies only, using `>=` minimum version bounds. Pip now resolves and installs the latest compatible transitive dependencies at install time, so Dependabot only monitors packages the project actually depends on directly.
+
+**Impact:**
+- Dependabot alert surface reduced from ~200 packages to ~35
+- All future transitive dependency updates are handled automatically by pip
+- Security patches in transitive deps no longer require manual `requirements.txt` edits
+- The minimum versions set correspond to the last tested working versions
